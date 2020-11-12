@@ -10,6 +10,6 @@ class Education extends Model
     protected $table='Educations';
     protected $fillable=['name'];
     public  function user(){
-        return $this->belongsTo(user::class);
+        return $this->belongsTo(User::class);
     }
 }

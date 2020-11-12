@@ -1,26 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
-
-
 use App\Education;
 use App\Model;
-
 use App\Models\user;
 use http\Env\Response;
+
 use Illuminate\Http\Request;
 
-class echcationcontroller extends Controller
+
+
+class EchcationController extends Controller
 {
     public function index()
     {
-
-        return response()->json(Education::all(), 200);
+        return response()->json(Education::all() ,200);
     }
 
     public function store(Request $request)
     {
-
         $education = Education::create([
             'name' => $request->name,
         ]);
@@ -33,7 +31,7 @@ class echcationcontroller extends Controller
             $Education =Education::find($id);
             return response()->json($Education->update($request->all()), 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'useremail not found!'], 404);
+            return response()->json(['message' => ' not found!'], 404);
         }
 
     }

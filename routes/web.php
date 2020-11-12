@@ -12,51 +12,58 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-
+$router->get('/key', function () {
+    return \Illuminate\Support\Str::random(32);
+});
 $router->get('/', function () use ($router) {
+
     return $router->app->version();
 });
+///register and login
+$router->post('register', 'AuthController@register');
+$router->post('login', 'AuthController@login');
+
+
 // API route group
-$router->group(['prefix' => 'api'], function () use ($router) {
-    // Matches "/api/register
-    $router->post('register/{education_id}', 'AuthController@register');
-    $router->post('login' ,'AuthController@login');
+$router->group(['prefix' => 'api', 'middleware' => 'auth'], function () use ($router) {
 ///bookmark
-    $router->post('bookuser/{user_id}/store/{book_id}' ,'bookmarkcontroller@store');
-    $router->post('bookuser/{user_id}/storedelete/{book_id}' ,'bookmarkcontroller@delete');
+    $router->post('bookuser/{user_id}/store/{book_id}', 'BookmarkController@store');
+    $router->post('bookuser/{user_id}/storedelete/{book_id}', 'BookmarkController@delete');
 
     ///like
-    $router->post('bookuser/{user_id}/like/{book_id}' ,'likecontroller@like');
-    $router->post('bookuser/{user_id}/dislike/{book_id}' ,'likecontroller@dislike');
-    $router->get('bookuser/showlike/{book_id}' ,'likecontroller@show');
-    ///route book
-    $router->post('book/{user_id}/store/{category_id}' ,'bookcontroller@store');
-    $router->get('book/get' ,'bookcontroller@index');
-    $router->get('book/get/{book_id}' ,'bookcontroller@show');
-    $router->PUT('book/{user_id}/update/{education_id}','bookcontroller@update');
-    $router->delete('book/{user_id}/destroy/{education_id}','bookcontrollerdestroy');
+    $router->post('bookuser/{user_id}/like/{book_id}', 'likeController@like');
+    $router->post('bookuser/{user_id}/dislike/{book_id}', 'likeController@dislike');
+    $router->get('bookuser/showlike/{book_id}', 'likeController@show');
 
-//route categoryucation
-    $router->post('category/store' ,'categorycontrooler@store');
-    $router->get('category/get' ,'categorycontrooler@index');
-    $router->PUT('category/update/{id}' ,'categorycontrooler@update');
-    $router->delete('category/destroy/{id}','categorycontrooler@destroy');
+
+    /// book
+    $router->post('book/store', 'BookController@store');
+    $router->get('book/get', 'BookController@index');
+    $router->get('book/get/{book_id}', 'BookController@show');
+    $router->post('book/{book_id}/update/', 'BookController@update');/* update book */
+    $router->delete('book/{book_id}/destroy/', 'BookController@destroy');
 
     //route echocation
-    $router->post('education/store' ,'echcationcontroller@store');
-    $router->get('education/get' ,'echcationcontroller@index');
-    $router->PUT('education/update/{id}','echcationcontroller@update');
-    $router->delete('education/destroy/{id}','echcationcontroller@destroy');
+    $router->post('education/store', 'EchcationController@store');
+    $router->get('education/get', 'EchcationController@index');
+    $router->put('education/update/{id}', 'EchcationController@update');
+    $router->delete('education/destroy/{id}', 'EchcationController@destroy');
+///serch
+    $router->get('serch', 'SerchController@index');
+
+///user
+    $router->post('user/update/{user_id}', 'UserController@update');/* update user */
+    $router->post('user', 'UserController@user');
+    $router->delete('user/destroy/{user_id}', 'UserController@destroy');
 
 
 
-    ///route user
-//    $router->get('user/get' ,'usercontroller@index');
-//    $router->PUT('education/update/{education_id}','usercontroller@update');
-//    $router->delete('education/destroy/{education_id}','usercontroller@destroy');
+    //route category
+    $router->post('category/store', 'Admin\CategoryController@store');
+    $router->get('category/get', 'Admin\CategoryController@index');
+    $router->PUT('category/update/{id}', 'Admin\CategoryController@update');
+    $router->delete('category/destroy/{id}', 'Admin\CategoryController@destroy');
 
+    //status book active or disable
+    $router->post('book/status/{book_id}', 'Admin\Book_Controller@bookstatus');
 });
-
-
-
-

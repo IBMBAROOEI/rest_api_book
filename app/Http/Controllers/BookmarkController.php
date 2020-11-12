@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 
-class bookmarkcontroller extends Controller
+class bookmarkController extends Controller
 {
 
 
@@ -31,7 +31,7 @@ class bookmarkcontroller extends Controller
     {
         $user = User::find($user_id);
         $user->bookmarks()->detach($book_id);
-        return response()->json('not bookmark', 200);
+        return response()->json('delete', 200);
     }
 
 }

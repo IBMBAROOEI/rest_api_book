@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Middleware;
-
+use App\Models\User;
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Support\Facades\Config;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class Authenticate
 {
@@ -12,18 +14,18 @@ class Authenticate
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
-    protected $auth;
+//    protected $auth;
 
-    /**
-     * Create a new middleware instance.
-     *
-     * @param  \Illuminate\Contracts\Auth\Factory  $auth
-     * @return void
-     */
-    public function __construct(Auth $auth)
-    {
-        $this->auth = $auth;
-    }
+//    /**
+//     * Create a new middleware instance.
+//     *
+//     * @param  \Illuminate\Contracts\Auth\Factory  $auth
+//     * @return void
+//     */
+//    public function __construct(Auth $auth)
+//    {
+//        $this->auth = $auth;
+//    }
 
     /**
      * Handle an incoming request.
@@ -33,12 +35,26 @@ class Authenticate
      * @param  string|null  $guard
      * @return mixed
      */
-    public function handle($request, Closure $next, $guard = null)
+    public function handle($request, Closure $next)
     {
-        if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+
+
+        // Get User From Token
+//        $user = JWTAuth::user();
+        $user = JWTAuth::parseToken()->authenticate();
+        // Return Error If Token Return No User
+        if ($user == null) {
+            return response()->json(['message' => 'کاربر نامعتبر'], 401);
         }
+        Config::set('user', $user);
 
         return $next($request);
+
+//        if ($this->auth->guard($guard)->guest())
+//        {
+//            return response('Unauthorized', 401);
+//        }
+//
+//        return $next($request);
     }
 }

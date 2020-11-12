@@ -7,17 +7,17 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class likecontroller extends Controller
+class likeController extends Controller
 {
     public function like(Request $request, $user_id, $book_id)
     {
         if( DB::table('book_user_like')->where([['user_id', $user_id], ['book_id', $book_id]])->exists()){
-            return" befor like";
+            return" is___________________________like";
         }
         else{
             $user = User::find($user_id);
             $user->like_books()->attach($book_id);
-            return response()->json('you _like', 200);
+            return response()->json('is __________________like', 200);
         }
 
     }
@@ -26,7 +26,7 @@ class likecontroller extends Controller
     {
         $user = User::find($user_id);
         $user->like_books()->detach($book_id);
-        return response()->json('dis__like', 200);
+        return response()->json('dis_________________like', 200);
     }
     public  function show($book_id){
         $like=DB::table('book_user_like')->where('book_id', '=',$book_id)->count();
